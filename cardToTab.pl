@@ -1,15 +1,32 @@
 #!/usr/bin/perl
+use Cwd;
 
 sub trim($);
 
 open INPUT,"tracks1851to2010_atl_2011rev.txt";
-open PARENT, ">delim_data/parent_data.tab";
+open PARENT, ">delim_data/storm_info.tab";
 open DAYS, ">delim_data/day_data.tab";
 open FINAL, ">delim_data/final_data.tab";
+open R1, ">r/r1.R";
 
 $max_days = 0;
 $num_days = 0;
 $parent_id = 0;
+
+$dir = getcwd;
+
+#PRINTING COLUMN HEADERS FOR R
+print PARENT "seq_num\tmonth\tday\tyear\tstorm_num_days\tstorm_num_this_year\tstorm_num_cumul\tstorm_name\thit_us\tsss\tlast_storm_of_year\t\n";
+print DAYS "seq_num\tparent_seq_num\tmonth\tday\tstorm_type_0000z\tlat_0000z\tlon_0000z\twind_0000z\tpressure_0000z\tstorm_type_0600z\tlat_0600z\tlon_0600z\twind_0600z\tpressure_0600z\tstorm_type_1200z\tlat_1200z\tlon_1200z\twind_1200z\tpressure_1200z\tstorm_type_1800z\tlat_1800z\tlon_1800z\twind_1800z\tpressure_1800z\t\n";
+print FINAL "seq_num\tparent_seq_num\tmax_status\t\n";
+
+print R1 'si <- read.csv("' . $dir . '/delim_data/storm_info.tab",sep="\t",head=TRUE)
+names(si)
+plot(si$storm_num_days,si$year,xlab="Number of days in Storm",ylab="Year")
+plot(si$year,si$storm_num_this_year,xlab="Year",ylab="Number of Storms")
+plot(si$sss,si$year,xlab="Severity of Storm",ylab="Year")
+
+';
 
 while($line = <INPUT>){
 	chomp($line);
@@ -101,6 +118,7 @@ close INPUT;
 close PARENT;
 close DAYS;
 close FINAL;
+close R1;
 
 # Perl trim function to remove whitespace from the start and end of the string
 sub trim($){

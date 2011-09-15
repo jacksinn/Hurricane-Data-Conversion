@@ -1,3 +1,4 @@
+seq_num	parent_seq_num	max_status	
 00030	00005	HR	
 00045	00035	HR	
 00060	00050	TS	
